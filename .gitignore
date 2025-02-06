@@ -1,0 +1,12 @@
+# Unity3D .gitignore file.
+# Store this file at the root of your local repository.
+
+Library
+Temp
+
+.DS_Store
+
+*.blend1
+*.csproj
+*.pidb
+*.sln 
