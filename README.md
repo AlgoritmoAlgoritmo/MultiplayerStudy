@@ -1,2 +1,2 @@
 # MultiplayerStudy
-Study of different ways for making multiplayer games connections.
+Study of different tools to develop multiplayer games.
