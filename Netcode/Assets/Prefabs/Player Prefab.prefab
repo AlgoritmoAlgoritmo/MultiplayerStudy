@@ -135,6 +135,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0.1
+  spawnedObjectPrefab: {fileID: 5189636592278523800, guid: 22204b29316d19641bc85bb51d9a87a9, type: 3}
 --- !u!114 &5706448613169314659
 MonoBehaviour:
   m_ObjectHideFlags: 0

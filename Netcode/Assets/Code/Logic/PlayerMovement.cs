@@ -16,6 +16,8 @@ namespace JMonkeyNetcodeTutorial {
         #region Variables
         [SerializeField]
         private float speed = .1f;
+        [SerializeField]
+        private Transform spawnedObjectPrefab;
 
         private NetworkVariable<int> randomNumber = new NetworkVariable<int>(0, 
                                                             NetworkVariableReadPermission.Everyone,
@@ -26,7 +28,7 @@ namespace JMonkeyNetcodeTutorial {
                                                         NetworkVariableWritePermission.Owner );
 
         private Vector3 auxPosition;
-
+        private Transform spawnedObjectInstance;
         public struct MyCustomData : INetworkSerializable {
             public int _int;
             public bool _bool;
@@ -60,11 +62,38 @@ namespace JMonkeyNetcodeTutorial {
                 */
 
                 // TestServerRpc( new ServerRpcParams() );
+                /*
                 TestClientRpc( new ClientRpcParams {
                     Send = new ClientRpcSendParams {
                         TargetClientIds = new List<ulong> { 1 }
                     }
                 } );
+                */
+
+                /*
+                 * Object spawning
+                 */
+                /*
+                // Instantiate( spawnedObjectPrefab ); // This doesn't work: the object only spawns locally
+
+                // Instead, objects should be instantiated like follows:
+                spawnedObjectInstance = Instantiate( spawnedObjectPrefab );
+                spawnedObjectInstance.GetComponent<NetworkObject>().Spawn( true );
+                // Yet, when executed from a client, it will throw an execption,
+                // because only the server can spawn objects.
+                // For this reason, ServerRpc methods should be used to spawn them.
+                */
+
+                SpawnObjectServerRpc();
+            }
+
+
+            if( Input.GetKeyUp( KeyCode.Y ) ) {
+                /*
+                spawnedObjectInstance.GetComponent<NetworkObject>().Despawn(true);
+                Destroy( spawnedObjectInstance.gameObject );
+                */
+                DespawnObjectServerRpc();
             }
 
 
@@ -118,6 +147,18 @@ namespace JMonkeyNetcodeTutorial {
         [ClientRpc] // Sends message from server to client. The function always has to end with "ClientRpc".
         private void TestClientRpc( ClientRpcParams _clientRpcParams ) {
             Debug.Log( "TestServerRpc " + OwnerClientId + "," + _clientRpcParams.Send.TargetClientIds );
+        }
+
+        [ServerRpc]
+        private void SpawnObjectServerRpc() {
+            spawnedObjectInstance = Instantiate( spawnedObjectPrefab );
+            spawnedObjectInstance.GetComponent<NetworkObject>().Spawn( true );
+        }
+
+        [ServerRpc]
+        private void DespawnObjectServerRpc() {
+            spawnedObjectInstance.GetComponent<NetworkObject>().Despawn( true );
+            Destroy( spawnedObjectInstance.gameObject );
         }
         #endregion
     }
